@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/urls';
+---
+
+<Base title="Страница не найдена" notFound>
+  <div class="band">
+    <div class="container">
+      <h1 class="page-title">Страница не найдена</h1>
+      <p>Такой страницы на сайте нет. Перейдите на <a href={href('/')}>главную</a> или выберите раздел в меню.</p>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,12 @@
+title: Нестандартные изделия
+order: 4
+description: "Нестандартные изделия на заказ: вентиляционные решётки, короба, вентиляционные зонты. Иваново и Ивановская область."
+items:
+  - title: Вентиляционная решетка
+    image: ./nestandartnyie-detali/01-ventilyatsionnaya-reshetka.jpg
+  - title: Вентиляционная решетка треугольная
+    image: ./nestandartnyie-detali/02-ventilyatsionnaya-reshetka-treugolnaya.jpg
+  - title: Короб
+    image: ./nestandartnyie-detali/03-korob.jpg
+  - title: Вентиляционный зонт
+    image: ./nestandartnyie-detali/04-ventilyatsionnyy-zont.jpg

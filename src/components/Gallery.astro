@@ -1,0 +1,127 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getImage, Image } from 'astro:assets';
+import { CARD_SIZES, CARD_WIDTH, CARD_WIDTHS } from '../lib/images';
+
+interface Props {
+  items: { title?: string; alt?: string; image: ImageMetadata }[];
+}
+
+// Маленькие фото sharp не увеличивает. Свойства item.image не читаем:
+// любое обращение к ним заставляет Astro копировать в сборку тяжёлый оригинал.
+const FULL_WIDTH = 1920;
+
+const items = await Promise.all(
+  Astro.props.items.map(async (item) => {
+    const full = await getImage({ src: item.image, width: FULL_WIDTH, format: 'jpg', quality: 82 });
+    return { ...item, alt: item.alt ?? item.title ?? '', full: full.src };
+  }),
+);
+---
+
+<ul class="gallery">
+  {
+    items.map((item) => (
+      <li class="card">
+        <a class="card__link" href={item.full} data-lightbox data-caption={item.title ?? ''}>
+          <Image
+            src={item.image}
+            alt={item.alt}
+            class="card__image"
+            width={CARD_WIDTH}
+            widths={CARD_WIDTHS}
+            sizes={CARD_SIZES}
+            quality={75}
+          />
+          {item.title && <span class="card__title">{item.title}</span>}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<dialog class="lightbox" aria-label="Просмотр фото">
+  <figure class="lightbox__figure">
+    <img class="lightbox__image" alt="" />
+    <figcaption class="lightbox__caption">
+      <span class="lightbox__title"></span>
+      <span class="lightbox__counter"></span>
+    </figcaption>
+  </figure>
+  <button class="lightbox__btn lightbox__close" type="button" aria-label="Закрыть">×</button>
+  <button class="lightbox__btn lightbox__prev" type="button" aria-label="Предыдущее фото">‹</button>
+  <button class="lightbox__btn lightbox__next" type="button" aria-label="Следующее фото">›</button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.lightbox');
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]')];
+
+  // Без поддержки <dialog> (старый Safari) ссылки просто открывают фото.
+  if (dialog && typeof dialog.showModal === 'function' && links.length) {
+    const image = dialog.querySelector<HTMLImageElement>('.lightbox__image')!;
+    const title = dialog.querySelector<HTMLElement>('.lightbox__title')!;
+    const counter = dialog.querySelector<HTMLElement>('.lightbox__counter')!;
+    let current = 0;
+
+    const show = (index: number) => {
+      current = (index + links.length) % links.length;
+      const link = links[current];
+      image.src = link.href;
+      image.alt = link.querySelector('img')?.alt ?? '';
+      title.textContent = link.dataset.caption ?? '';
+      counter.textContent = `${current + 1} / ${links.length}`;
+      for (const offset of [-1, 1]) {
+        new Image().src = links[(current + offset + links.length) % links.length].href;
+      }
+    };
+
+    links.forEach((link, index) =>
+      link.addEventListener('click', (event) => {
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        show(index);
+        dialog.showModal();
+      }),
+    );
+
+    dialog.querySelector('.lightbox__close')!.addEventListener('click', () => dialog.close());
+    dialog.querySelector('.lightbox__prev')!.addEventListener('click', () => show(current - 1));
+    dialog.querySelector('.lightbox__next')!.addEventListener('click', () => show(current + 1));
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(current - 1);
+      else if (event.key === 'ArrowRight') show(current + 1);
+    });
+
+    // Клик по фону (вне фото и кнопок) закрывает просмотр.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog || event.target === dialog.querySelector('.lightbox__figure')) dialog.close();
+    });
+
+    dialog.addEventListener('close', () => {
+      image.removeAttribute('src');
+      links[current].focus();
+    });
+
+    let touchX: number | null = null;
+    let touchY = 0;
+    dialog.addEventListener(
+      'touchstart',
+      (event) => {
+        touchX = event.touches.length === 1 ? event.touches[0].clientX : null;
+        touchY = event.touches[0].clientY;
+      },
+      { passive: true },
+    );
+    dialog.addEventListener('touchend', (event) => {
+      if (touchX === null) return;
+      const dx = event.changedTouches[0].clientX - touchX;
+      const dy = event.changedTouches[0].clientY - touchY;
+      touchX = null;
+      // При увеличении пальцем жест — это прокрутка фото, а не листание.
+      if ((window.visualViewport?.scale ?? 1) > 1) return;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(dx < 0 ? current + 1 : current - 1);
+    });
+  }
+</script>

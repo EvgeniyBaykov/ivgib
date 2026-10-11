@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { company } from '../data/company';
+import { TILE_SIZES, TILE_WIDTH, TILE_WIDTHS } from '../lib/images';
+import { href } from '../lib/urls';
+
+const sections = (await getCollection('sections')).sort((a, b) => a.data.order - b.data.order);
+
+const advantages = [
+  'Отличное качество',
+  'Короткие сроки изготовления',
+  'Любая цветовая гамма',
+  'Разумные цены',
+  'Из своих материалов и материалов заказчика',
+];
+---
+
+<Base description={`Изготовим дымники (натрубники, флюгарки), настолбники, доборные элементы для кровли, отливы, карнизы, парапеты и нестандартные изделия. ${company.region}. Тел. ${company.phone}.`}>
+  <section class="band">
+    <div class="container">
+      <div class="intro">
+        <h1 class="intro__title">Изготовим</h1>
+        <p class="intro__lead">
+          Дымники (натрубники, флюгарки), настолбники, доборный элемент для кровли, отливы, карнизы, парапеты, а также
+          нестандартные изделия.
+        </p>
+        <p class="intro__region">В городе Иваново и Ивановской области.</p>
+      </div>
+
+      <ul class="tiles">
+        {
+          sections.map((section) => (
+            <li>
+              <a class="tile" href={href(`/${section.id}/`)}>
+                <Image
+                  src={section.data.items[0].image}
+                  alt=""
+                  class="tile__image"
+                  width={TILE_WIDTH}
+                  widths={TILE_WIDTHS}
+                  sizes={TILE_SIZES}
+                  quality={75}
+                />
+                <span class="tile__title">{section.data.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="band band--surface" aria-label="Преимущества">
+    <ul class="container advantages">
+      {advantages.map((text) => <li class="advantages__item">{text}</li>)}
+    </ul>
+  </section>
+
+  <section class="band band--accent">
+    <div class="container call">
+      <p class="call__text">Звоните по телефону, и мы вам всё подробно расскажем.</p>
+      <a class="call__phone" href={company.phoneHref}>{company.phone}</a>
+    </div>
+  </section>
+</Base>

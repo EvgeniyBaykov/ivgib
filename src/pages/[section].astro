@@ -1,0 +1,22 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Gallery from '../components/Gallery.astro';
+
+export const getStaticPaths = (async () => {
+  const sections = await getCollection('sections');
+  return sections.map((section) => ({ params: { section: section.id }, props: { section } }));
+}) satisfies GetStaticPaths;
+
+const { section } = Astro.props;
+---
+
+<Base title={section.data.title} description={section.data.description}>
+  <div class="band">
+    <div class="container">
+      <h1 class="page-title">{section.data.title}</h1>
+      <Gallery items={section.data.items} />
+    </div>
+  </div>
+</Base>

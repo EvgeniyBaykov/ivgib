@@ -1,0 +1,24 @@
+title: Доборные элементы
+order: 3
+description: "Доборные элементы для кровли на заказ: планки конька, торцевые, карнизные, ендовы, парапеты, фартуки, отливы. Иваново и Ивановская область."
+items:
+  - title: Планка конька фигурного
+    image: ./elements/01-planka-konka-figurnogo.jpg
+  - title: Парапет
+    image: ./elements/02-parapet.jpg
+  - title: Фартук
+    image: ./elements/03-fartuk.jpg
+  - title: Отлив вариант 1
+    image: ./elements/04-otliv-variant-1.jpg
+  - title: Отлив вариант 2
+    image: ./elements/05-otliv-variant-2.jpg
+  - title: Планка торцевая вариант 1
+    image: ./elements/06-planka-tortsevaya-variant-1.jpg
+  - title: Планка торцевая вариант 2
+    image: ./elements/07-planka-tortsevaya-variant-2.jpg
+  - title: Планка ендовы верхняя
+    image: ./elements/08-planka-endovy-verhnyaya.jpg
+  - title: Планка карнизная
+    image: ./elements/09-planka-karniznaya.jpg
+  - title: «G» планка
+    image: ./elements/10-g-planka.jpg

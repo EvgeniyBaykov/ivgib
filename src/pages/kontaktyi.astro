@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { company } from '../data/company';
+---
+
+<Base title="Контакты" description={`Телефон: ${company.phone}. ${company.region}.`}>
+  <div class="band">
+    <div class="container">
+      <h1 class="page-title">Контакты</h1>
+      <div class="contact">
+        <div class="contact__item">
+          <p class="contact__label">Телефон</p>
+          <p><a class="phone-link contact__phone" href={company.phoneHref}>{company.phone}</a></p>
+        </div>
+        <div class="contact__item">
+          <p class="contact__label">Где работаем</p>
+          <p>{company.region}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

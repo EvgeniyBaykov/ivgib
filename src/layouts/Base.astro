@@ -1,0 +1,122 @@
+---
+import '@fontsource/pt-sans/400.css';
+import '@fontsource/pt-sans/700.css';
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { getImage, Image } from 'astro:assets';
+import headerImage from '../assets/header.jpg';
+import { company } from '../data/company';
+import { canonical, href, isMainDomain } from '../lib/urls';
+
+interface Props {
+  /** Заголовок страницы без названия сайта; для главной не передаётся. */
+  title?: string;
+  description?: string;
+  /** Страница 404: noindex и без canonical. */
+  notFound?: boolean;
+}
+
+const { title, description, notFound = false } = Astro.props;
+const fullTitle = title ? `${title} | ${company.name}` : company.name;
+const canonicalUrl = canonical(Astro.url.pathname);
+const currentPath = new URL(canonicalUrl).pathname;
+const ogImage = await getImage({ src: headerImage, format: 'jpg' });
+
+const sections = (await getCollection('sections')).sort((a, b) => a.data.order - b.data.order);
+const nav = [
+  { path: '/', label: 'Главная' },
+  ...sections.map((s) => ({ path: `/${s.id}/`, label: s.data.title })),
+  { path: '/kontaktyi/', label: 'Контакты' },
+];
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {(notFound || !isMainDomain) && <meta name="robots" content="noindex, nofollow" />}
+    {!notFound && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={title ?? company.name} />
+    {description && <meta property="og:description" content={description} />}
+    {!notFound && <meta property="og:url" content={canonicalUrl} />}
+    {/* На временном адресе хэш файла другой, и на ivgib.ru такой картинки нет. */}
+    {isMainDomain && <meta property="og:image" content={canonical(ogImage.src)} />}
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#2b2c2e" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">К содержимому</a>
+    <header class="site-header">
+      <Image src={headerImage} alt="" class="site-header__backdrop" width={480} loading="eager" />
+      <div class="container site-header__inner">
+        <Image
+          src={headerImage}
+          alt=""
+          class="site-header__image"
+          loading="eager"
+          fetchpriority="high"
+          widths={[480, 950]}
+          sizes="(min-width: 1232px) 1200px, 100vw"
+        />
+        <div class="site-header__bar">
+          <a class="brand" href={href('/')}>
+            <span class="brand__name">{company.name}</span>
+            <span class="brand__region">{company.region}</span>
+          </a>
+          <a class="phone-button" href={company.phoneHref}>{company.phone}</a>
+        </div>
+      </div>
+    </header>
+
+    <nav class="site-nav" aria-label="Основное меню">
+      <div class="container site-nav__inner">
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="site-nav__burger" aria-hidden="true"></span>
+          Меню
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+          {
+            nav.map((item) => (
+              <li>
+                <a href={href(item.path)} aria-current={item.path === currentPath ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <main id="content" class="site-main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p>
+          <strong>{company.name}</strong><br />
+          {company.region}
+        </p>
+        <p>
+          <a class="site-footer__phone" href={company.phoneHref}>{company.phone}</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>('.site-nav__toggle');
+      toggle?.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+    </script>
+  </body>
+</html>

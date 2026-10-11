@@ -1,0 +1,743 @@
+:root {
+  --bg: #353535;
+  --surface: #404143;
+  --surface-dark: #2b2c2e;
+  --text: #e9edf2;
+  --muted: #b5bdc8;
+  --accent: #99ccff;
+  --brand: #eded74;
+  --border: rgb(255 255 255 / 0.12);
+  --radius: 10px;
+  --gutter: 16px;
+  --container: 1400px;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Закреплённое меню не должно закрывать цель якоря и элемент в фокусе. */
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'PT Sans', system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  background: var(--brand);
+  color: #222;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* Шапка: на всю ширину; фото (950×200) целиком по центру, по бокам — оно же, размытое. */
+.site-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--surface-dark);
+}
+
+.site-header__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(20px) brightness(0.45);
+  transform: scale(1.15);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: 1.25rem;
+}
+
+.site-header__image {
+  order: 1;
+  width: 100%;
+  aspect-ratio: 950 / 200;
+  border-radius: var(--radius);
+}
+
+.site-header__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+/* От 700px текст лежит поверх фото. Если крупный шрифт растянет шапку, фото не обрежется. */
+@media (min-width: 700px) {
+  .site-header__inner {
+    display: grid;
+    grid-template-areas: 'stack';
+    padding-block: 0;
+  }
+
+  .site-header__image,
+  .site-header__bar {
+    grid-area: stack;
+  }
+
+  /* Фото и панель с текстом одной ширины и по центру: текст всегда лежит на фото. */
+  .site-header__image,
+  .site-header__bar {
+    justify-self: center;
+    width: min(100%, 1200px);
+  }
+
+  .site-header__image {
+    align-self: center;
+    border-radius: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+
+  /* mask-image поднимает фото в отдельный слой, поэтому панель с текстом поднимаем явно. */
+  .site-header__bar {
+    position: relative;
+    z-index: 1;
+    align-self: stretch;
+    padding: 0.75rem clamp(1rem, 4%, 3rem);
+    /* Подложка проявляется с края плавно, как и маска фото, — без вертикальной ступеньки. */
+    background: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.55) 4%, rgb(0 0 0 / 0.25) 45%, transparent 70%);
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  color: var(--brand);
+  text-decoration: none;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.7);
+}
+
+.brand__name {
+  font-size: clamp(1.75rem, 1.2rem + 2.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.brand__region {
+  margin-top: 0.35rem;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.phone-button {
+  display: inline-block;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #232323;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.phone-button:hover {
+  background: #f6f6a0;
+}
+
+/* Меню */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--surface-dark);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-nav__toggle {
+  display: none;
+}
+
+.site-nav__list {
+  display: flex;
+  /* Страховка: если шрифт увеличен только на странице, пункты переносятся, а не уходят за край. */
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__list a {
+  display: block;
+  padding: 0.85rem 0.9rem;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+
+.site-nav__list a:hover {
+  color: var(--brand);
+}
+
+.site-nav__list a[aria-current='page'] {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+}
+
+/* Без JS список остаётся открытым, кнопка не показывается. */
+/* Порог в em (56.25em = 900px при обычном шрифте): при крупном шрифте браузера бургер включится раньше. */
+@media (max-width: 56.249em) {
+  /* Открытое мобильное меню не закрепляем: иначе оно съедает пол-экрана при прокрутке. */
+  html {
+    scroll-padding-top: 0;
+  }
+
+  .site-nav {
+    position: static;
+  }
+
+  .js .site-nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-block: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .site-nav__burger,
+  .site-nav__burger::before,
+  .site-nav__burger::after {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+  }
+
+  .site-nav__burger {
+    position: relative;
+  }
+
+  .site-nav__burger::before,
+  .site-nav__burger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .site-nav__burger::before {
+    top: -6px;
+  }
+
+  .site-nav__burger::after {
+    top: 6px;
+  }
+
+  .site-nav__list {
+    flex-direction: column;
+    padding-bottom: 0.5rem;
+  }
+
+  .js .site-nav__list {
+    display: none;
+  }
+
+  .js .site-nav__toggle[aria-expanded='true'] + .site-nav__list {
+    display: flex;
+  }
+
+  .site-nav__list a {
+    padding: 0.7rem 0.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .site-nav__list a[aria-current='page'] {
+    border-bottom-color: var(--border);
+  }
+}
+
+/* Контент */
+.site-main {
+  flex: 1;
+}
+
+.band {
+  padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+}
+
+.band--surface {
+  background: var(--surface-dark);
+  border-block: 1px solid var(--border);
+}
+
+/* Спокойная полоса призыва: тёмный оливковый фон и тонкая фирменная линия сверху. */
+.band--accent {
+  padding-block: 1.25rem;
+  border-top: 2px solid var(--brand);
+  background: #3b3b2e;
+}
+
+.page-title {
+  margin: 0 0 1.5rem;
+  color: var(--accent);
+  font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem);
+  line-height: 1.2;
+}
+
+.intro {
+  max-width: 860px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.intro__title {
+  margin: 0 0 1rem;
+  color: var(--brand);
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.intro__lead {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-size: clamp(1.2rem, 1rem + 0.8vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.intro__region {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+
+.phone-link {
+  color: var(--brand);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Плитки разделов на главной */
+.tiles {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 560px) {
+  .tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-dark);
+  color: #fff;
+  text-decoration: none;
+}
+
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0.2) 45%, transparent 70%);
+}
+
+.tile__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.tile:hover .tile__image {
+  transform: scale(1.04);
+}
+
+.tile:hover {
+  border-color: var(--brand);
+}
+
+.tile__title {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.9rem;
+  z-index: 1;
+  font-size: clamp(1.2rem, 1rem + 0.6vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Преимущества */
+/* 5 пунктов: 1, 3 (3+2) или 5 колонок — без одинокого пункта во втором ряду. */
+.advantages {
+  display: grid;
+  gap: 1rem 1.5rem;
+  margin-block: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .advantages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .advantages {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.advantages__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.advantages__item::before {
+  content: '✓';
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #232323;
+  font-size: 1rem;
+}
+
+/* Призыв позвонить */
+.call {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.call__text {
+  margin: 0;
+  font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.call__phone {
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #232323;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.call__phone:hover {
+  background: #f6f6a0;
+}
+
+/* Карточки каталога */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card__link:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.card__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--surface-dark);
+}
+
+.card__title {
+  padding: 0.75rem 0.9rem 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Контакты */
+.contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+  max-width: 760px;
+  font-size: 1.2rem;
+}
+
+.contact__item {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.contact p {
+  margin: 0;
+}
+
+.contact .contact__label {
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.contact__phone {
+  font-size: 1.75rem;
+}
+
+/* Подвал */
+.site-footer {
+  background: var(--surface-dark);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-block: 1.5rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer strong {
+  color: var(--text);
+}
+
+.site-footer__phone {
+  color: var(--brand);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Просмотр фото */
+.lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgb(12 12 12 / 0.97);
+  color: #fff;
+}
+
+.lightbox::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.lightbox[open] {
+  display: flex;
+}
+
+/* Safari до 15.4 не знает <dialog> и сам закрытый диалог не прячет. */
+.lightbox:not([open]) {
+  display: none;
+}
+
+.lightbox__figure {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 3.5rem 4rem 1rem;
+  min-width: 0;
+}
+
+.lightbox__image {
+  max-width: 100%;
+  max-height: calc(100dvh - 8rem);
+  object-fit: contain;
+  user-select: none;
+}
+
+.lightbox__caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  text-align: center;
+}
+
+.lightbox__title {
+  font-weight: 700;
+}
+
+.lightbox__counter {
+  color: #bbb;
+}
+
+.lightbox__btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox__btn:hover {
+  background: rgb(255 255 255 / 0.25);
+}
+
+.lightbox__close {
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.lightbox__prev,
+.lightbox__next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__prev {
+  left: 0.5rem;
+}
+
+.lightbox__next {
+  right: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .lightbox__figure {
+    padding-inline: 0;
+    padding-bottom: 4rem;
+  }
+
+  .lightbox__prev,
+  .lightbox__next {
+    top: auto;
+    bottom: 0.5rem;
+    transform: none;
+  }
+
+  .lightbox__image {
+    max-height: calc(100dvh - 10rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__link,
+  .tile__image {
+    transition: none;
+  }
+}
+
+/* Горизонтальный свайп в просмотре не должен запускать жест «назад» браузера. */
+html:has(.lightbox[open]) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}

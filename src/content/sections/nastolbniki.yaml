@@ -1,0 +1,22 @@
+title: Настолбники
+order: 2
+description: "Настолбники на заказ: с пикой, под светильник, угловые, двухуровневые. Иваново и Ивановская область."
+items:
+  - title: Настолбник вариант 1
+    image: ./nastolbniki/01-nastolbnik-variant-1.jpg
+  - title: Настолбник вариант 2
+    image: ./nastolbniki/02-nastolbnik-variant-2.jpg
+  - title: Настолбник вариант 3
+    image: ./nastolbniki/03-nastolbnik-variant-3.jpg
+  - title: Настолбник с пикой
+    image: ./nastolbniki/04-nastolbnik-s-pikoy.jpg
+  - title: Настолбник под светильник
+    image: ./nastolbniki/05-nastolbnik-pod-svetilnik.jpg
+  - title: Настолбник под светильник 2
+    image: ./nastolbniki/06-nastolbnik-pod-svetilnik-2.jpg
+  - title: Настолбник под светильник (угловой)
+    image: ./nastolbniki/07-nastolbnik-pod-svetilnik-uglovoy.jpg
+  - title: Настолбник двухуровневый
+    image: ./nastolbniki/08-nastolbnik-dvuhurovnevyy.jpg
+  - alt: Настолбники на заборе
+    image: ./nastolbniki/09-nastolbniki.jpg
