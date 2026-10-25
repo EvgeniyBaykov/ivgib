@@ -12,8 +12,6 @@ npm run build     # сборка в dist/
 npm run preview   # просмотр собранного сайта
 ```
 
-Сборка для временного адреса в подпапке: `BASE_PATH=/ivgib npm run build`. На всех страницах тогда стоит `noindex`, а sitemap не создаётся.
-
 ## Где что лежит
 
 | Что поменять | Где |
@@ -38,6 +36,12 @@ npm run preview   # просмотр собранного сайта
 
 GitHub Actions (`.github/workflows/deploy.yml`) при push в `main` выполняет `npm ci`, `npm run check`, `npm run build` и публикует `dist/` на GitHub Pages. Повторить деплой без коммита можно кнопкой «Run workflow» во вкладке Actions.
 
-Пока домен не подключён, сайт собирается с `BASE_PATH=/ivgib` и открывается по временному адресу https://evgeniybaykov.github.io/ivgib/ (с `noindex`).
+Сайт открывается на домене https://ivgib.ru, адрес https://evgeniybaykov.github.io/ivgib/ перенаправляет на него.
 
-В настройках репозитория: Settings → Pages → Source: **GitHub Actions**.
+В настройках репозитория: Settings → Pages → Source: **GitHub Actions**, Custom domain: **ivgib.ru**, **Enforce HTTPS** (галочка становится доступна, когда GitHub выпустит сертификат для домена).
+
+При деплое через Actions домен берётся из настроек Pages (Custom domain). Файл `public/CNAME` его только дублирует: менять домен нужно в настройках, иначе он не сменится.
+
+DNS домена (REG.RU, серверы `ns1.reg.ru`, `ns2.reg.ru`): четыре A-записи `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` и `CNAME www` → `evgeniybaykov.github.io.`.
+
+Сборка в подпапку для проверки: `BASE_PATH=/ivgib npm run build` (на всех страницах `noindex`, без sitemap).

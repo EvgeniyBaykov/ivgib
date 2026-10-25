@@ -1,6 +1,6 @@
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-/** Внутренняя ссылка с учётом base: href('/dymniki/') → '/ivgib/dymniki/' на временном адресе. */
+/** Внутренняя ссылка с учётом base: href('/dymniki/') → '/ivgib/dymniki/' при сборке в подпапку. */
 export function href(path: string): string {
   return `${base}${path}`;
 }

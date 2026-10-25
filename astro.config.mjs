@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// BASE_PATH задаётся для временного адреса в подпапке (GitHub Pages без домена).
+// BASE_PATH задаётся для проверочной сборки в подпапку (например, /ivgib); на домене не нужен.
 // Пустая строка и слеш на конце приводятся к тому же виду, что и BASE_URL в src/lib/urls.ts.
 const base = (process.env.BASE_PATH || '/').replace(/(.)\/+$/, '$1');
 const isMainDomain = base === '/';

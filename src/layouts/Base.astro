@@ -46,7 +46,7 @@ const nav = [
     <meta property="og:title" content={title ?? company.name} />
     {description && <meta property="og:description" content={description} />}
     {!notFound && <meta property="og:url" content={canonicalUrl} />}
-    {/* На временном адресе хэш файла другой, и на ivgib.ru такой картинки нет. */}
+    {/* При сборке в подпапку хэш файла другой, и на ivgib.ru такой картинки нет. */}
     {isMainDomain && <meta property="og:image" content={canonical(ogImage.src)} />}
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
     <meta name="theme-color" content="#2b2c2e" />

@@ -29,9 +29,6 @@ jobs:
       - run: npm run check
 
       - run: npm run build
-        env:
-          # Временный адрес https://evgeniybaykov.github.io/ivgib/ до подключения домена.
-          BASE_PATH: /ivgib
 
       - uses: actions/upload-pages-artifact@v5
         with:
