@@ -42,6 +42,6 @@ GitHub Actions (`.github/workflows/deploy.yml`) при push в `main` выпол
 
 При деплое через Actions домен берётся из настроек Pages (Custom domain). Файл `public/CNAME` его только дублирует: менять домен нужно в настройках, иначе он не сменится.
 
-DNS домена (REG.RU, серверы `ns1.reg.ru`, `ns2.reg.ru`): четыре A-записи `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` и `CNAME www` → `evgeniybaykov.github.io.`.
+Домен зарегистрирован в REG.RU, DNS-зона — в Yandex Cloud DNS (`ns1.yandexcloud.net`, `ns2.yandexcloud.net`): с DNS-серверов REG.RU проверка GitHub не проходила и сертификат не выпускался. Баланс Yandex Cloud должен быть положительным, иначе зона перестанет отвечать и сайт пропадёт. Записи зоны: четыре A-записи `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` и `CNAME www` → `evgeniybaykov.github.io.`.
 
 Сборка в подпапку для проверки: `BASE_PATH=/ivgib npm run build` (на всех страницах `noindex`, без sitemap).
