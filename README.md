@@ -45,3 +45,5 @@ GitHub Actions (`.github/workflows/deploy.yml`) при push в `main` выпол
 Домен зарегистрирован в REG.RU, DNS-зона — в Yandex Cloud DNS (`ns1.yandexcloud.net`, `ns2.yandexcloud.net`): с DNS-серверов REG.RU проверка GitHub не проходила и сертификат не выпускался. Баланс Yandex Cloud должен быть положительным, иначе зона перестанет отвечать и сайт пропадёт. Записи зоны: четыре A-записи `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` и `CNAME www` → `evgeniybaykov.github.io.`.
 
 Сборка в подпапку для проверки: `BASE_PATH=/ivgib npm run build` (на всех страницах `noindex`, без sitemap).
+
+Яндекс Метрика (счётчик 113831983) подключена в `src/layouts/Base.astro` и выводится только в боевой сборке для основного домена: в `npm run dev` и в сборке с `BASE_PATH` её нет.
