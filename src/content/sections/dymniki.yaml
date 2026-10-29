@@ -1,21 +1,11 @@
 title: Дымники
 order: 1
-description: "Дымники (натрубники, флюгарки) на заказ: «Эконом», «Классика», «Ретро», «Элегант», «Престиж», для круглой трубы. Иваново и Ивановская область."
+description: "Дымники (натрубники, флюгарки) на заказ: «Эконом», «Классика», «Ретро», «Отливный», для круглой трубы. Иваново и Ивановская область."
 items:
   - title: Дымник для круглой трубы
     image: ./dymniki/01-dymnik-dlya-krugloy-truby.jpg
-  - title: Дымник «Эконом»
-    image: ./dymniki/02-dymnik-ekonom.jpg
   - title: Дымник «Эконом 1»
     image: ./dymniki/03-dymnik-ekonom-1.jpg
-  - title: Дымник «Эконом 2»
-    image: ./dymniki/04-dymnik-ekonom-2.jpg
-  - title: Дымник «Эконом 3»
-    image: ./dymniki/05-dymnik-ekonom-3.jpg
-  - title: Дымник «Эконом» с надстройкой
-    image: ./dymniki/06-dymnik-ekonom-s-nadstroykoy.jpg
-  - title: Дымник с надстройкой и решёткой
-    image: ./dymniki/07-dymnik-s-nadstroykoy-i-reshetkoy.jpg
   - title: Дымник «Ретро» (прямые ноги)
     image: ./dymniki/08-dymnik-retro-pryamye-nogi.jpg
   - title: Дымник «Классика»
@@ -30,9 +20,3 @@ items:
     image: ./dymniki/13-dymnik-otlivnyy.jpg
   - title: Дымник «Отливный вариант 2»
     image: ./dymniki/14-dymnik-otlivnyy-variant-2.jpg
-  - title: Дымник «Элегант»
-    image: ./dymniki/15-dymnik-elegant.jpg
-  - title: Дымник «Престиж»
-    image: ./dymniki/16-dymnik-prestizh.jpg
-  - title: Дымник «Престиж версия»
-    image: ./dymniki/17-dymnik-prestizh-versiya.jpg
