@@ -10,9 +10,5 @@ items:
     image: ./nastolbniki/03-nastolbnik-variant-3.jpg
   - title: Настолбник с пикой
     image: ./nastolbniki/04-nastolbnik-s-pikoy.jpg
-  - title: Настолбник под светильник 2
-    image: ./nastolbniki/06-nastolbnik-pod-svetilnik-2.jpg
-  - title: Настолбник двухуровневый
-    image: ./nastolbniki/08-nastolbnik-dvuhurovnevyy.jpg
   - alt: Настолбники на заборе
     image: ./nastolbniki/09-nastolbniki.jpg
